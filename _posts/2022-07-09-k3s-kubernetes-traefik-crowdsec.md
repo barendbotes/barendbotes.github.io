@@ -6,19 +6,18 @@ tags: [kubernetes,security,reverse-proxy]
 ---
 # Kubernetes
 
-## ⭐ Requirements
+## Requirements
 
-- [Ansible *Ansible is an agentless automation tool that can manage an entire fleet of machines and other devices.*](/ARRB/miscellaneous-work-instructions#ansible-installation)
-- [Kubectl *The Kubernetes command-line tool, `kubectl`, allows you to run commands against Kubernetes clusters.*](/ARRB/miscellaneous-work-instructions#kubectl-installation)
-- [Helm *Helm is the package manager for Kubernetes.*](/ARRB/miscellaneous-work-instructions#helm-installation)
-- [SSH Key *Key based authentication is more secure and convenient than traditional password authentication.*](/ARRB/miscellaneous-work-instructions#ssh-key-based-authentication-setup)
+- [**Ansible** - *Ansible is an agentless automation tool that can manage an entire fleet of machines and other devices.*](/posts/random-installations/#ansible)
+- [**Kubectl** - *The Kubernetes command-line tool, `kubectl`, allows you to run commands against Kubernetes clusters.*](/posts/random-installations/#kubectl)
+- [**Helm** - *Helm is the package manager for Kubernetes.*](/posts/random-installations/#helm)
+- [**SSH Key** - *Key based authentication is more secure and convenient than traditional password authentication.*](/posts/random-installations/#ssh-keys)
 
-<br>
 
-## 🚀 K3s Ansible Install
+## K3s Ansible Install
 
-### 🍴 Preparation
-First you will need to clone `the repo`, I am using [TechnoTim's](https://github.com/techno-tim) `repo`, so please give it a ⭐ as well:
+### Preparation
+First you will need to clone `the repo`, I am using [TechnoTim's](https://github.com/techno-tim) `repo`, so please give it a ⭐ as well. These steps are basically the same as TechnoTim, so rather give him the kudo's.
 
 ```bash
 git clone https://github.com/techno-tim/k3s-ansible
@@ -63,7 +62,7 @@ extra_server_args: "--no-deploy servicelb --no-deploy traefik"
 extra_agent_args: ""
 ```
 
-### ☸️ Create Cluster
+### Create Cluster
 
 Start provisioning of the cluster using the following command:
 
@@ -73,12 +72,21 @@ ansible-playbook site.yml -i inventory/my-cluster/hosts.ini
 
 After deployment control plane will be accessible via virtual ip-address which is defined in inventory/group_vars/all.yml as `apiserver_endpoint`
 
-## 📄 Kubernetes cluster management
+## Kubernetes cluster management
 
 ### Kubectl copy
 
 Depending on your `kubectl` install, you might need to create the `.kube` folder first:
 
+```bash
+ls -la | grep .kube
+```
+You should see something similar to 
+```bash
+username username 4096 Jul  9 10:23 .kube
+```
+
+If not, then run the below
 ```bash
 mkdir ~/.kube
 ```
@@ -89,7 +97,7 @@ To manage the cluster from your computer, you would need to copy over the `kubec
 scp -i .ssh/id_rsa user@server_node_ip:~/.kube/config ~/.kube/config
 ```
 
-### ❓ Testing your k3s cluster
+### Testing your k3s cluster
 
 Be sure you can ping your VIP defined in `inventory/my-cluster/group_vars/all.yml` as `apiserver_endpoint`
 ```bash
@@ -102,39 +110,7 @@ Getting the nodes
 kubectl get nodes
 ```
 
-Deploying a sample `nginx` workload
-```bash
-kubectl apply -f k3s-ansible/example/deployment.yml
-```
-
-Check to be sure it was deployed
-```bash
-kubectl describe deployment nginx
-```
-
-Deploying a sample `nginx` service with a `LoadBalancer`
-```bash
-kubectl apply -f k3s-ansible/example/service.yml
-```
-
-Check service and be sure it has an IP from metal lb as defined in `inventory/my-cluster/group_vars/all.yml`
-```bash
-kubectl describe service nginx
-```
-
-Visit that url or curl
-```bash
-curl http://192.168.30.80
-```
-
-You should see the `nginx` welcome page.
-You can clean this up by running
-```bash
-kubectl delete -f k3s-ansible/example/deployment.yml
-kubectl delete -f k3s-ansible/example/service.yml
-```
-
-## 🚦 Traefik installation
+## Traefik installation
 
 Add `traefik` helm repo and update
 ```bash
@@ -142,7 +118,7 @@ helm repo add traefik https://helm.traefik.io/traefik
 helm repo update
 ```
 
-Clone `the repo` from github for all the `configuration` files
+Clone the `repo` from github for all the `configuration` files
 ```bash
 git clone https://github.com/barendbotes/helm-chart-values.git
 ```
