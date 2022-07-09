@@ -62,3 +62,7 @@ services:
 ## Photos
 
 <img src="https://static-cdn.jtvnw.net/jtv_user_pictures/fe2a71e2-99d8-4299-86be-16f1932530e7-profile_banner-480.png" alt="Employee data" width="150" height="60" title="Employee Data title">
+
+## 
+
+<blockquote class="prompt-tip"><div><p>This is a Tip box.</p></div></blockquote>
