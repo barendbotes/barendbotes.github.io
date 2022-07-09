@@ -344,8 +344,9 @@ kubectl apply -f whoami/whoami.yml
 ```
 
 Now test the `whoami` application by navigating to `https://loadBalanerIP/whoami`
+
 > You will find the `loadBalancerIP` in the `traefik/traefik-values.yml` file
-{.is-info}
+{: .prompt-info}
 
 This page should give you information about your connection details. Now go check the logs of the `traefik-bouncer` application and the `crowdsec-lapi` application. You should see your IP listed in the logs.
 
