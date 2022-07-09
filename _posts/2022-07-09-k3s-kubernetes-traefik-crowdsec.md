@@ -240,7 +240,7 @@ kubectl -n traefik logs $(kubectl -n traefik get pods --selector "app.kubernetes
 ```
 It should be `level=info msg="Configuration loaded from flags."`
 
-### 📈 Traefik dashboard
+### Traefik dashboard
 
 To expose the `traefik` dashboard, we need to create a `secret` for the `basic auth` user account
 Generate the `base64` key that represents your user account. Be sure to replace `$username` and `$password` with your required details
@@ -277,7 +277,7 @@ Navigate to `https://traefik-dashboard.example.com/dashboard/`
 > The trailing `/` after `dashboard` is very import, so please ensure that you enter the full address `https://traefik-dashboard.example.com/dashboard/`
 {.is-warning}
 
-## 🔐 CrowdSec installation
+## CrowdSec installation
 
 First install the `helm` chart
 ```bash
