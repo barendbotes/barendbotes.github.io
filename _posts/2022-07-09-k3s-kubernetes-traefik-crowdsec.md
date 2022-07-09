@@ -4,6 +4,9 @@ date: 2022-07-08 18:56 -500
 categories: [k3s,ips,reverse-proxy]
 tags: [kubernetes,security,reverse-proxy]
 ---
+
+![Kubernetes](https://www.drupal.org/files/project-images/Kubernetes.png)
+
 # Kubernetes
 
 ## Requirements
@@ -70,7 +73,7 @@ Start provisioning of the cluster using the following command:
 ansible-playbook site.yml -i inventory/my-cluster/hosts.ini
 ```
 
-After deployment control plane will be accessible via virtual ip-address which is defined in inventory/group_vars/all.yml as `apiserver_endpoint`
+After deployment control plane will be accessible via virtual ip-address which is defined in `inventory/group_vars/all.yml` as `apiserver_endpoint`
 
 ## Kubernetes cluster management
 
@@ -120,12 +123,12 @@ helm repo update
 
 Clone the `repo` from github for all the `configuration` files
 ```bash
-git clone https://github.com/barendbotes/helm-chart-values.git
+git clone https://github.com/barendbotes/kubernetes-templates.git
 ```
 
 Change directory into the cloned `repo`
 ```bash
-cd arrb-kubernetes
+cd kubernetes-templates
 ```
 
 This `traefik` setup will also have a dynamic `file` configuration, so edit `traefik/traefik-config.yml` to your liking for any services outside of `kubernetes` that you would like to be behind the `traefik` proxy.
@@ -324,6 +327,15 @@ bouncer:
 Deploy the bouncer in the `traefik` namespace
 ```bash
 helm install -n traefik traefik-bouncer crowdsec/crowdsec-traefik-bouncer -f crowdsec/traefik-bouncer.yml
+```
+
+Update the `traefik/traefik-values.yml` file and uncomment the `traefik-bouncer` `middleware`.
+```yaml
+   - --entrypoints.websecure.http.middlewares=traefik-traefik-bouncer@kubernetescrd
+```
+Upgrade `traefik` with the chart values
+```bash
+helm upgrade traefik traefik/traefik -n traefik -f traefik/traefik-values.yml
 ```
 
 To confirm that everything works, we will deploy a whoami container that will be proxied via `traefik`
