@@ -65,4 +65,5 @@ services:
 
 ## 
 
-<blockquote class="prompt-tip"><div><p>This is a Tip box.</p></div></blockquote>
+> This is a tip
+{: .prompt-tip }
