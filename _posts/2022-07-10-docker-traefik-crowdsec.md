@@ -67,6 +67,7 @@ services:
       - "traefik.http.routers.traefik-secure.tls.domains[0].sans=*.example.com"
       - "traefik.http.routers.traefik-secure.tls.domains[1].main=domain.com"
       - "traefik.http.routers.traefik-secure.tls.domains[1].sans=*.domain.com"
+# ...
 ```
 
 To generate a `username` and `password` hash, use the below `command`
