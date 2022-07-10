@@ -37,8 +37,9 @@ At first we will create a `network` which will be shared between the `services` 
 docker network create proxy
 ```
 
-We need to then modify the rights on `traefik/data/acme.json`, this is needed as `traefik` will fail to create and store `certificates` as your basic access rights are too open
+We need to create and then modify the rights to `traefik/data/acme.json`, this is needed as `traefik` will fail to create and store `certificates` as your basic access rights are too open
 ```bash
+touch traefik/data/acme.json
 chmod 600 traefik/data/acme.json
 ```
 
