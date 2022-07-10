@@ -16,7 +16,7 @@ tags: [docker,docker-compose,security,reverse-proxy]
 
 ## The repo
 
-I have saved all my `docker` files and templates in [Github](https://github.com)
+I have saved all my `docker` files and `templates` in [Github](https://github.com)
 
 To use my `templates`, you can clone my `repo` as follows
 ```bash
