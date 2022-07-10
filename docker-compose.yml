@@ -1,6 +1,7 @@
 version: "3.8"
 services:
-  nginx:
-    build: ./Dockerfile
+  cyberwiki:
+    build:
+      context: Dockerfile
     ports:
       - "8081:80"
