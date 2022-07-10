@@ -1,6 +1,6 @@
 version: "3.8"
 services:
   nginx:
-    build: .
+    build: ./Dockerfile
     ports:
       - "8081:80"
