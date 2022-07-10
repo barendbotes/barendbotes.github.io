@@ -1,6 +1,6 @@
-version: "3.9"
+version: "3.8"
 services:
-  web:
+  nginx:
     build: .
     ports:
       - "8081:80"
