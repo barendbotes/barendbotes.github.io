@@ -1,6 +1,6 @@
 ---
 title: Random Configuration Files
-date: 2022-07-08 18:56 -500
+date: 2022-07-10 10:00 -500
 categories: [configuration,linux,files]
 tags: [hosting,code,docs]
 ---
