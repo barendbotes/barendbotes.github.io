@@ -338,15 +338,26 @@ Upgrade `traefik` with the chart values
 helm upgrade traefik traefik/traefik -n traefik -f traefik/traefik-values.yml
 ```
 
+## Final tests
+
 To confirm that everything works, we will deploy a whoami container that will be proxied via `traefik`
+
+First we will modify `whoami/whoami.yml` and populate `match: Host(whoami.domain.com)` with your own domain
+```yaml
+  routes:
+    - kind: Rule
+      match: Host(`whoami.domain.com`)
+```
+
+Then we will `deploy` the application
 ```bash
 kubectl apply -f whoami/whoami.yml
 ```
 
-Now test the `whoami` application by navigating to `https://loadBalanerIP/whoami`
+Now test the `whoami` application by navigating to `https://whoami.domain.com`
 
-> You will find the `loadBalancerIP` in the `traefik/traefik-values.yml` file
-{: .prompt-info}
+> Remember to add the `whoami.domain.com` record to your DNS or add it in your `hosts` file.
+{: .prompt-tip}
 
 This page should give you information about your connection details. Now go check the logs of the `traefik-bouncer` application and the `crowdsec-lapi` application. You should see your IP listed in the logs.
 
