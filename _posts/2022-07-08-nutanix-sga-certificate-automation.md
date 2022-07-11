@@ -35,7 +35,7 @@ mkdir ~/.secrets/certbot
 
 Create and edit credential file
 ```bash
-nano ~/.secrets/certbot/cloudflare.ini
+vi ~/.secrets/certbot/cloudflare.ini
 ```
 
 Credential file contents
@@ -63,11 +63,6 @@ This is the same certificate that you can use for your SGA setup, you can find a
 Install epel-release
 ```bash
 sudo yum install epel-release
-```
-
-Install Nano text editor
-```bash
-sudo yum install nano -y
 ```
 
 Create crontab -e
