@@ -1,8 +1,9 @@
 ---
 title: Automated k3s with crowdsec and traefik
-date: 2022-07-09 19:00 -500
+date: 2022-07-09 19:00 +0200
 categories: [k3s,ips,reverse-proxy]
 tags: [kubernetes,security,reverse-proxy]
+author: barend
 ---
 
 ![Kubernetes](https://www.drupal.org/files/project-images/Kubernetes.png)

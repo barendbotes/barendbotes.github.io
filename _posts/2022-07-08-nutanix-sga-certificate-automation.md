@@ -1,8 +1,9 @@
 ---
 title: Nutanix SGA Certificate Automation
-date: 2022-07-08 18:56 -500
+date: 2022-07-08 18:56 +0200
 categories: [automation,certificates]
 tags: [letsencrypt,cloudflare,automation,nutanix]
+author: barend
 ---
 
 !['Nutanix'](https://download.logo.wine/logo/Nutanix/Nutanix-Logo.wine.png)

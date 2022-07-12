@@ -1,8 +1,9 @@
 ---
 title: Example Post
-date: 2022-07-08 18:56 -500
+date: 2022-07-08 00:00 +0200
 categories: [documentation,linux,jekyll]
 tags: [hosting,code,docs]
+author: barend
 ---
 
 # Welcome!
@@ -61,7 +62,7 @@ services:
 
 ## Photos
 
-<img src="https://static-cdn.jtvnw.net/jtv_user_pictures/fe2a71e2-99d8-4299-86be-16f1932530e7-profile_banner-480.png" alt="Employee data" width="150" height="60" title="Employee Data title">
+![Cyber](https://static-cdn.jtvnw.net/jtv_user_pictures/fe2a71e2-99d8-4299-86be-16f1932530e7-profile_banner-480.png){: w="700" h="400" }
 
 ## Prompt Boxes
 
@@ -76,3 +77,7 @@ services:
 
 > An example showing the danger type prompt. 
 {: .prompt-danger}
+
+## More
+
+Refer to https://chirpy.cotes.page/posts/write-a-new-post/

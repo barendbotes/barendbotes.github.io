@@ -1,8 +1,9 @@
 ---
 title: Random Installation Instructions
-date: 2022-07-09 17:00 -500
+date: 2022-07-09 17:00 +0200
 categories: [linux,ubuntu,debian]
 tags: [apt-get,ansible,kubectl,helm]
+author: barend
 ---
 
 # Welcome!

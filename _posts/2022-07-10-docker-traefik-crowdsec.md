@@ -1,8 +1,9 @@
 ---
 title: Docker with Traefik and Crowdsec
-date: 2022-07-10 10:00 -500
+date: 2022-07-10 10:00 +0200
 categories: [docker,docker-compose,ips,reverse-proxy]
 tags: [docker,docker-compose,security,reverse-proxy]
+author: barend
 ---
 
 ![Docker](https://logos-world.net/wp-content/uploads/2021/02/Docker-Logo-2015-2017.png)
