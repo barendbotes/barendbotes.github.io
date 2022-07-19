@@ -182,6 +182,16 @@ Apply the `traefik-config.yml` configuration
 kubectl create namespace traefik
 kubectl apply -f traefik/traefik-config.yml
 ```
+> I have found that there is an issue with serving the `Traefik` dashboard with the `Crowdsec` ForwardAuth (Could be related to the BasicAuth middleware for `Traefik` dashboard). However, we will only allow `Traefik` dashboard internally so, I am not too worried about having `Crowdsec` enabled for it.
+{.is-warning}
+
+> We will not be applying the `ForwardAuth` `crowdsec` middleware at a global config level, we will apply it to each `service` via the `middleware` file or `middlewares` defined in the deployment below
+{.is.info}
+
+We have a few `middlewares` to configure, this will be the same as the file config, however, these will be used for our Kubernetes `workloads`.
+```
+kubectl apply -f templates/middleware.yml
+```
 
 Update the `traefik/traefik-values.yml` `helm` chart values with your details
 Keeping in mind to change the values relevant to you.
@@ -189,10 +199,6 @@ Keeping in mind to change the values relevant to you.
   - --certificatesresolvers.cloudflare.acme.email=email@example.com
   - --entrypoints.websecure.http.tls.domains[0].main=example.com
   - --entrypoints.websecure.http.tls.domains[0].sans=*.example.com
-```
-Comment out the `traefik-bouncer` `middleware`
-```yaml
-#   - --entrypoints.websecure.http.middlewares=traefik-traefik-bouncer@kubernetescrd
 ```
 
 > With the `Cloudflare` API token you need to use either `CF_API_KEY` or `CF_DNS_API_TOKEN`, the differences between the two matter. If you are using a `Global API` token in `Cloudflare` from your account then use `CF_API_KEY`, however, if you created an `API token` and selected the domain for which the `API token` as access to, then use `CF_DNS_API_TOKEN`
