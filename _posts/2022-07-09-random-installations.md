@@ -170,3 +170,49 @@ Now add your user account to the `Docker` group
 ```bash
 sudo chmod -aG docker $USER
 ```
+
+## InvoiceNinja on Docker
+
+We can install `InvoiceNinja` on `Docker` which will give us a self-hosted invoicing platform. This will be hosted behind `Traefik` and `Crowdsec`.
+
+I have saved all my `docker` files and `templates` in [Github](https://github.com)
+
+To use my `templates`, you can clone my `repo` as follows
+```bash
+git clone https://github.com/barendbotes/docker-templates.git
+```
+
+Change directory into the `repo`
+```bash
+cd docker-templates
+```
+> All references to files will be in this directory. 
+{: .prompt-info}
+
+Edit the `invoiceninja/.env`{: .filepath} file and populate with your required details
+```bash
+APP_ENV=production
+APP_DEBUG=false
+APP_URL=https://invoice.domain.com
+APP_KEY=SomeRandomStringSomeRandomString
+APP_CIPHER='AES-256-CBC'
+DB_TYPE=mysql
+DB_STRICT=false
+DB_HOST=mariadb
+DB_DATABASE=invoice-db
+DB_USERNAME=invoice-user
+DB_PASSWORD=SuperSecureComplexPassword
+APP_LOCALE=en
+PHANTOMJS_CLOUD_KEY='a-demo-key-with-low-quota-per-ip-address'
+URL_RULE=Host(`invoice.domain.com`)
+SERVICE=invoiceninja
+COOKIE=invoiceninja_lvl
+PORT=80
+SCHEME=http
+```
+{: file="invoiceninja/.env" }
+
+Once all the `environment` `variables` are set, you can start the container:
+```bash
+docker-compose -f invoiceninja/docker-compose.yml up -d
+```

@@ -106,3 +106,35 @@ sudo netplan apply
 
 > You should now be able to access your linux VM from the new static IP 
 {: .prompt-info}
+
+## Update and Upgrade
+
+Always update and upgrade a new installation.
+```bash
+sudo apt-get update
+
+sudo apt-get upgrade
+```
+
+## Enable unattended upgrades
+
+This enables `Ubuntu` to search and update the OS
+```bash
+sudo dpkg-reconfigure --priority=low unattended-upgrades
+```
+
+## Hostname and Timezone
+
+If you want to set your `hostname`, you can do so using the below command
+
+```bash
+sudo hostnamectl set-hostname chosen-server-name
+```
+
+To set the timezone, you can do the below
+```bash
+sudo timedatectl set-timezone Continent/City
+```
+
+> If you don't know your timezone, just type in `sudo timedatectl set-timezone America` with a little bit of your continent name i.e `America` and then press `Tab` to see all the options for that continent
+{: .prompt-tip}
