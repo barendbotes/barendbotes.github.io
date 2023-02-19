@@ -20,12 +20,12 @@ Install Certbot with the DNS plugin. To look for other DNS plugins, you can look
 
 Install epel-release
 ```bash
-sudo yum install epel-release
+sudo yum install epel-release -y
 ```
 
-Install Certbot and DNS extension
+Install Certbot, DNS extension and Nano
 ```bash
-sudo yum install certbot certbot-dns-cloudflare -y
+sudo yum install certbot certbot-dns-cloudflare nano -y
 ```
 
 Create folders for credential file
@@ -61,21 +61,73 @@ sudo certbot certonly --dns-cloudflare --dns-cloudflare-credentials ~/.secrets/c
 This is the same certificate that you can use for your SGA setup, you can find all the required certificates in `/etc/letsencrypt/live/sga.<domain.com>`
 
 ## SGA Setup
-Install epel-release
+
+Create the bash script for the certbot renewal and file copy
+
 ```bash
-sudo yum install epel-release
+sudo nano filesync.sh
 ```
 
+Copy in the below script, replace the certificate name accordingly
+
+```bash
+#!/bin/bash
+
+# path to the source file
+src_file="/etc/letsencrypt/live/sga.<domain.com>/fullchain.pem"
+
+# path to the destination file
+dst_file="/opt/server.crt"
+
+# log file
+log_file="/var/log/copy_server_crt.log"
+
+# run the certbot renew command
+certbot renew
+
+# check the exit status of the certbot renew command
+if [ $? -eq 0 ]; then
+  # certbot renew was successful, compare the source and destination files
+  cmp --silent "$src_file" "$dst_file"
+
+  # check the exit status of the cmp command
+  if [ $? -eq 0 ]; then
+    # the files are the same
+    echo "`date`: files are the same, no copy needed" >> "$log_file"
+  else
+    # the files are different, copy the source file to the destination file
+    cp "$src_file" "$dst_file"
+    if [ $? -eq 0 ]; then
+      # copy was successful
+      echo "`date`: copy successful" >> "$log_file"
+      # reload Nginx
+      systemctl reload nginx
+    else
+      # copy failed
+      echo "`date`: copy failed" >> "$log_file"
+    fi
+  fi
+else
+  # certbot renew failed
+  echo "`date`: certbot renew failed" >> "$log_file"
+fi
+```
+
+
 Create crontab -e
+
 ```bash
 sudo crontab -e
 ```
 
 Press “i” for insert and populate the below
+
 ```bash
-15 3 * * * /usr/bin/certbot renew --quiet --post-host "/usr/sbin/service nginx reload" > /dev/null 2>&1
+0 0 * * * /bin/bash /home/nutanix/filesync.sh 2>&1
 ```
+
 Press “Esc” and the type in below and press enter
+
 ```bash
 :wq
 ```
@@ -84,25 +136,18 @@ Backup default certificate files
 ```bash
 sudo cp /opt/server.crt /opt/server.crt.bak
 sudo cp /opt/server.key /opt/server.key.bak
-sudo cp /opt/frame/etc/dhparam.pem /opt/frame/etc/dhparam.pem.bak
 ```
 
-Create Symbolic links to LetsEncrypt Certificates
+Copy the key to the SGA location
+
 ```bash
-sudo ln -s /etc/letsencrypt/live/sga.<domain.com>/fullchain.pem /opt/server.crt
-sudo ln -s /etc/letsencrypt/live/sga.<domain.com>/privkey.pem /opt/server.key
-sudo ln -s /etc/letsencrypt/ssl-dhparams.pem /opt/frame/etc/dhparam.pem
+sudo cp /etc/letsencrypt/live/sga.<domain.com>/privkey.pem /opt/server.key
 ```
 
-Check Nginx config reload
-```bash
-sudo nginx -t
-sudo nginx -s reload
-```
+Run the script to confirm all is working.
 
-Finally restart the Nginx service
 ```bash
-sudo systemctl restart nginx
+sudo ./filesync.sh
 ```
 
 Check Status
