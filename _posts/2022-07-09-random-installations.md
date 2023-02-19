@@ -128,47 +128,16 @@ If you haven’t set a passphrase for the private key, you will be logged in imm
 ---
 ## Docker and Docker-compose
 
-This installation has been copied directly from `Docker` themselves, you can go to their instructions [here.](https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository)
+I prefer to use the built in repositories for `Docker` as Ubuntu does tend to keep them up to date and properly tested.
 
-Set up the repository
-
-Update the `apt` package index and install packages to allow `apt` to use a repository over HTTPS:
 ```bash
-sudo apt-get update
+sudo apt install docker docker-compose -y
 
-sudo apt-get install \
-ca-certificates \
-curl \
-gnupg \
-lsb-release
-```
-
-Add Docker’s official GPG key:
-```bash
-sudo mkdir -p /etc/apt/keyrings
-
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-```
-
-Use the following command to set up the repository:
-```bash
-echo \
-"deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
-$(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-```
-
-Install Docker Engine
-
-Update the `apt` package index, and install the latest version of Docker Engine, containerd, and Docker Compose, or go to the next step to install a specific version:
-```bash
-sudo apt-get update
-
-sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
 ```
 
 Now add your user account to the `Docker` group
 ```bash
-sudo chmod -aG docker $USER
+sudo usermod -aG docker $USER
 ```
 
 ## InvoiceNinja on Docker
@@ -215,4 +184,121 @@ SCHEME=http
 Once all the `environment` `variables` are set, you can start the container:
 ```bash
 docker-compose -f invoiceninja/docker-compose.yml up -d
+```
+
+## Keepalived
+
+Keepalived provides frameworks for both load balancing and high availability. The load balancing framework relies on the well-known and widely used Linux Virtual Server (IPVS) kernel module, which provides Layer 4 load balancing.
+
+Keepalived is quite simple to install, we will just run:
+
+```bash
+sudo apt install keepalived -y
+```
+
+Once installed, you would want to create the config file on each server.
+
+```bash
+sudo nano /etc/keepalived/keepalived.conf
+```
+
+You can use the following template, but modify for each server
+
+```yaml
+vrrp_instance VI_1 {
+        state MASTER
+        interface eth0 # Enter in correct interface name
+        virtual_router_id 10 # Unique to each VRRP instance
+        priority 25 # Higher number means higher priority
+        advert_int 1
+        lb_kind DR
+        unicast_src_ip 10.200.40.23 # Local server IP
+        unicast_peer{ # Enter in each other server IP
+                10.200.40.19 
+                10.200.40.20
+                10.200.40.18
+        }
+        authentication {
+                auth_type PASS
+                auth_pass $PASSWORD
+        }
+        virtual_ipaddress {
+                10.200.40.231/24 # VRRP IP address
+        }
+}
+```
+
+Enable the keepalived service and start it.
+
+```bash
+sudo systemctl enable keepalived
+sudo systemctl start keepalived
+```
+
+## GlusterFS Installation
+
+Ensure hostname resolution across nodes, below we have 3 nodes; node1 - 10.10.10.1, node2 - 10.10.10.2, node3 - 10.10.10.3
+
+```bash
+##node1
+echo '10.10.10.2 node2' | sudo tee -a /etc/hosts
+echo '10.10.10.3 node3' | sudo tee -a /etc/hosts
+
+##node2
+echo '10.10.10.1 node1' | sudo tee -a /etc/hosts
+echo '10.10.10.3 node3' | sudo tee -a /etc/hosts
+
+##node3
+echo '10.10.10.1 node1' | sudo tee -a /etc/hosts
+echo '10.10.10.2 node2' | sudo tee -a /etc/hosts
+```
+
+Create folder for GlusterFS
+
+```bash
+sudo mkdir /gluster
+sudo mkdir /gluster/${VOLUME_NAME}
+sudo mkdir /mnt/${VOLUME_NAME}
+```
+
+Install GlusterFS Server
+
+```bash
+sudo apt install glusterfs-server -y
+sudo systemctl start glusterd
+sudo systemctl enable glusterd
+```
+
+Peer nodes from master node, node1
+
+```bash
+sudo gluster peer probe node2
+sudo gluster peer probe node3
+```
+
+Check the status
+
+```bash
+sudo gluster peer status
+```
+
+Create the Gluster volume and start it
+
+```bash
+sudo gluster volume create ${VOLUME_NAME} replica 3 node1:/gluster/${VOLUME_NAME} node2:/gluster/${VOLUME_NAME} node3:/gluster/${VOLUME_NAME} force
+sudo gluster volume start ${VOLUME_NAME}
+sudo gluster volume info
+sudo gluster pool list
+```
+
+Enable mount at start up of server
+
+```bash
+echo 'localhost:/${VOLUME_NAME} /mnt/${VOLUME_NAME} glusterfs defaults,_netdev,noauto,x-systemd.automount 0 0' | sudo tee -a /etc/fstab
+```
+
+Mount volume
+
+```bash
+sudo mount -a
 ```

@@ -138,3 +138,21 @@ sudo timedatectl set-timezone Continent/City
 
 > If you don't know your timezone, just type in `sudo timedatectl set-timezone America` with a little bit of your continent name i.e `America` and then press `Tab` to see all the options for that continent
 {: .prompt-tip}
+
+## Docker ConfigMap
+
+Mapping config in portainer to path in docker container. compose file must use version 3.3 or higher.
+
+`docker-compose.yaml` file
+```yaml
+
+    configs:
+      - source: config.file
+        target: /path/in/container/config.file
+        uid: '0'
+        gid: '0'
+        mode: 292
+configs:
+  config.file:
+    external: true
+```
