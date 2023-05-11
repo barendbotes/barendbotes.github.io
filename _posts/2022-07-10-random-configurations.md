@@ -64,7 +64,7 @@ And then run it
 ./cloudflare-delete-all-records.sh
 ```
 
-## Certbot Ubuntu - Certificate Requests 90 Day
+## Certbot Ubuntu Certificate Requests 90 Day
 
 Install Certbot
 
@@ -375,7 +375,7 @@ users:
 ```
 
 
-### Static IP for Ubuntu Cloud-init Image
+### Static IP
 
 Create the config file to disable the cloud assigned network config
 
