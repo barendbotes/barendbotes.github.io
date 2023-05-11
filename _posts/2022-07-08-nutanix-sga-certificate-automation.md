@@ -14,53 +14,35 @@ Since modifying your SGA install is not supported by Nutanix, you will not recei
 
 I am using a Cloudflare DNS plugin for certbot for domain confirmation. 
 
-## Certbot Installation
+## Frame SGA Certificate Automation
 
-Install Certbot with the DNS plugin. To look for other DNS plugins, you can look [here](https://eff-certbot.readthedocs.io/en/stable/using.html#dns-plugins)
+***Replace "domain.com" with your own domain. Keep in mind that the "sga" child domain can be anything you want.***
 
 Install epel-release
+
 ```bash
-sudo yum install epel-release -y
+sudo yum install epel-release
 ```
 
-Install Certbot, DNS extension and Nano
+Install Certbot and DNS extension
+
 ```bash
-sudo yum install certbot certbot-dns-cloudflare nano -y
+sudo yum install certbot certbot-dns-cloudflare -y
 ```
 
-Create folders for credential file
+Install Nano text editor
+
 ```bash
-mkdir ~/.secrets
-mkdir ~/.secrets/certbot
+sudo yum install nano -y
 ```
 
-Create and edit credential file
-```bash
-vi ~/.secrets/certbot/cloudflare.ini
-```
-
-Credential file contents
-```ini
-# Cloudflare API credentials used by Certbot
-dns_cloudflare_email = <your-email-address>
-dns_cloudflare_api_key = <your-api-key>
-```
-
-Secure the file
-```bash
-chmod 600 ~/.secrets/certbot/cloudflare.ini
-```
-
-Create secret and permissions as per Certbot Work Docs
+Create secret and permissions as per [Certbot Work Docs](/posts/random-configurations/#certbot-ubuntu-certificate-requests-90-day)
 
 Create certificate
+
 ```bash
-sudo certbot certonly --dns-cloudflare --dns-cloudflare-credentials ~/.secrets/certbot/cloudflare.ini -d sga.<domain.com> -d *.sga.<domain.com>
+sudo certbot certonly --dns-cloudflare --dns-cloudflare-credentials ~/.secrets/certbot/cloudflare.ini -d *.sga.domain.com
 ```
-
-This is the same certificate that you can use for your SGA setup, you can find all the required certificates in `/etc/letsencrypt/live/sga.<domain.com>`
-
-## SGA Setup
 
 Create the bash script for the certbot renewal and file copy
 
@@ -74,10 +56,12 @@ Copy in the below script, replace the certificate name accordingly
 #!/bin/bash
 
 # path to the source file
-src_file="/etc/letsencrypt/live/sga.<domain.com>/fullchain.pem"
+src_file="/etc/letsencrypt/live/sga.domain.com/fullchain.pem"
+src_file_key="/etc/letsencrypt/live/sga.domain.com/privkey.pem"
 
 # path to the destination file
 dst_file="/opt/server.crt"
+dst_file_key="/opt/server.key"
 
 # log file
 log_file="/var/log/copy_server_crt.log"
@@ -97,6 +81,7 @@ if [ $? -eq 0 ]; then
   else
     # the files are different, copy the source file to the destination file
     cp "$src_file" "$dst_file"
+    cp "$src_file_key" "$dst_file_key"
     if [ $? -eq 0 ]; then
       # copy was successful
       echo "`date`: copy successful" >> "$log_file"
@@ -113,6 +98,11 @@ else
 fi
 ```
 
+Make the filesync script executable
+
+```bash
+sudo chmod +x filesync.sh
+```
 
 Create crontab -e
 
@@ -133,29 +123,41 @@ Press “Esc” and the type in below and press enter
 ```
 
 Backup default certificate files
+
 ```bash
 sudo cp /opt/server.crt /opt/server.crt.bak
 sudo cp /opt/server.key /opt/server.key.bak
+sudo cp /opt/frame/etc/dhparam.pem /opt/frame/etc/dhparam.pem.bak
 ```
 
-Copy the key to the SGA location
+Copy the newly created certificate files to the correct directory
 
 ```bash
-sudo cp /etc/letsencrypt/live/sga.<domain.com>/privkey.pem /opt/server.key
+sudo cp /etc/letsencrypt/live/sga.domain.com/fullchain.pem /opt/server.crt
+sudo cp /etc/letsencrypt/live/sga.domain.com/privkey.pem /opt/server.key
 ```
 
-Run the script to confirm all is working.
+Check Nginx config reload
 
 ```bash
-sudo ./filesync.sh
+sudo nginx -t
+sudo nginx -s reload
+```
+
+Finally restart the Nginx service
+
+```bash
+sudo systemctl restart nginx
 ```
 
 Check Status
+
 ```bash
 sudo systemctl status nginx
 ```
 
 If all is well, do one final test by rebooting the SGA
+
 ```bash
 sudo reboot now
 ```
