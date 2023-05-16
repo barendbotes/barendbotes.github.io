@@ -35,7 +35,7 @@ cd docker-templates
 
 At first we will create a `network` which will be shared between the `services` that need to utilize the `Traefik` reverse proxy
 ```bash
-docker network create proxy
+docker network create --attachable proxy
 ```
 
 We need to create and then modify the rights to `traefik/data/acme.json`, this is needed as `traefik` will fail to create and store `certificates` as your basic access rights are too open
@@ -178,8 +178,6 @@ entryPoints:
         entryPoint:
           to: https
           scheme: https
-     middlewares:
-       - crowdsec-bouncer@file # Yes, I know there is a redirect and I only need to add the middleware to https `entryPoint`, but does it matter?
   https:
     address: ":443"
     http:
@@ -195,34 +193,22 @@ docker-compose up -d -f crowdsec/docker-compose.yml --force-recreate
 
 To confirm that `crowdsec` and `traefik` is working together, we will do a quick test
 
-First you modify the `nginx` `docker-compose` file `nginx-test/docker-compose.yml` with your required details
-```yaml
-# ...
-    labels:
-      - traefik.enable=true
-      - traefik.docker.network=proxy
-      - traefik.http.routers.nginx.entrypoints=https
-      - traefik.http.routers.nginx.rule=Host(`test.example.com`) # Your web addres for your site
-      - traefik.http.services.nginx-service.loadbalancer.passhostheader=true
-      - traefik.http.services.nginx-service.loadbalancer.server.port=80 # The port that the container is exposed on
-      - traefik.http.services.nginx-service.loadbalancer.server.scheme=http # The scheme for the container port
-      - traefik.http.services.nginx-service.loadbalancer.sticky.cookie=true
-      - traefik.http.services.nginx-service.loadbalancer.sticky.cookie.httponly=true
-      - traefik.http.services.nginx-service.loadbalancer.sticky.cookie.secure=true
-      - traefik.http.services.nginx-service.loadbalancer.sticky.cookie.samesite=strict
-      - traefik.http.services.nginx-service.loadbalancer.sticky.cookie.name=nginx-test_lvl # Cookie name for more security - I assume...
-      - traefik.http.routers.nginx.tls=true
-      - traefik.http.routers.nginx.middlewares=secured@file
-# ...
+First you modify the `whoami` `.env` file `whoami/.env` with your required details
+
+```env
+URL=whoami.domain.com
+PORT=80
+COOKIE=whoami_lvl
+SERVICE=whoami
 ```
 
 Then you deploy the `container`
 ```bash
-docker-compose up -d -f nginx-test/docker-compose.yml
+docker-compose up -d -f whoami/docker-compose.yml
 ```
 
-Now navigate to `https://test.example.com` and confirm that you have a valid `certificate` from `Let's Encrypt`
-> Remember to point your `test.example.com` DNS to your `docker` instance 
+Now navigate to `https://whoami.example.com` and confirm that you have a valid `certificate` from `Let's Encrypt`
+> Remember to point your `whoami.example.com` DNS to your `docker` instance 
 {: .prompt-tip}
 
 Test the `crowdsec` `bouncer` by adding your IP to the ban list
@@ -230,7 +216,7 @@ Test the `crowdsec` `bouncer` by adding your IP to the ban list
 docker exec crowdsec_crowdsec_1 cscli decisions add --ip my-ip-address
 ```
 
-Confirm that you received a 'Forbidden' message when navigating to `https://test.example.com`
+Confirm that you received a 'Forbidden' message when navigating to `https://whoami.example.com`
 
 Remove your ban
 ```bash
