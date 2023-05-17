@@ -28,7 +28,7 @@ Change directory into the `repo`
 ```bash
 cd docker-templates
 ```
-> All references to files will be in this directory. 
+> All references to files will be from this directory. 
 {: .prompt-info}
 
 ## Traefik
