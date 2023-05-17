@@ -33,7 +33,28 @@ sudo apt update -y
 First we will create a docker swarm cluster on one of the servers
 
 ```bash
- docker swarm init
+ docker swarm init --default-addr-pool 172.31.0.0/16 --default-addr-pool-mask-length 24
+```
+
+The reason I created an address pool and mask length is because I do not plan on running hundreds and thousands of applications and networks in the cluster, what I chose allows me to run basically 255 /24 seperate networks within in the 172.31.0.0/16 range, so network-1 will be 172.31.0.0/24, network-2 will be 172.31.1.0./24 and so on. If you are planning to scale massively, then you might want to change those parameters to something else like `--default-addr-pool 10.0.0.0/8 --default-addr-pool-mask-length 24`, this will allow you to run 65 025 /24 networks within the 10.0.0.0/8 range.
+
+You can also mix and match. So if I want to stay within the 172.31.0.0/16 range, but I want to run more networks and I don't plan on scalling workloads, but rather running a lot of different container, then I can look at something like `--default-addr-pool 172.31.0.0/16 --default-addr-pool-mask-length 26` or even `--default-addr-pool 172.31.0.0/16 --default-addr-pool-mask-length 27`
+
+If you do choose to run on less networks and smaller subnets, you should also remember to delete your unused networks, containers and images just as a best practice. You can do so by running:
+
+Networks
+```bash
+docker network prune
+```
+
+Images
+```bash
+docker image prune -a
+```
+
+Volumes
+```bash
+docker volume prune
 ```
 
 Once it is done, it will give you a command to add workers, you can ignore that for now.
