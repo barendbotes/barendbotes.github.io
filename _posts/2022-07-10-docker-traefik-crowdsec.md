@@ -44,31 +44,15 @@ touch traefik/data/acme.json
 chmod 600 traefik/data/acme.json
 ```
 
-Next you will need to modify the `traefik/docker-compose.yml` file with your own requirements.
-```yaml
-version: '3.5'
-
-services:
-  traefik:
-    image: traefik:latest
-# ...
-    environment:
-      - CF_API_EMAIL=user@example.com
-      - CF_API_KEY=your-secure-api-key
-# ...
-    labels:
-# ...
-      - "traefik.http.routers.traefik.rule=Host(`traefik-dashboard.example.com`)"
-      - "traefik.http.middlewares.traefik-auth.basicauth.users=USER:PASSWORD_HASH"
-# ...
-      - "traefik.http.routers.traefik-secure.rule=Host(`traefik-dashboard.example.com`)"
-# ...
-      - "traefik.http.routers.traefik-secure.tls.certresolver=cloudflare" # We are using cloudflare as our Let's Encrypt validation
-      - "traefik.http.routers.traefik-secure.tls.domains[0].main=example.com"
-      - "traefik.http.routers.traefik-secure.tls.domains[0].sans=*.example.com"
-      - "traefik.http.routers.traefik-secure.tls.domains[1].main=domain.com"
-      - "traefik.http.routers.traefik-secure.tls.domains[1].sans=*.domain.com"
-# ...
+Next you will need to modify the `traefik/.env` file with your own requirements.
+```bash
+TRAEFIK_DASH_URL=traefik-dashboard.domain.com # The URL for the Traefik Dashboard
+CF_API_EMAIL=user@example.com # Cloudflare Email Address
+CF_API_KEY=<your-secure-api-key> # Global API Key
+CF_DNS_API_TOKEN=<your-secure-api-token> # DNS Zone Edit Permissions
+TRAEFIK_HASH=<user-password-hash> # echo $(htpasswd -nb "<USER>" "<PASSWORD>") | sed -e s/\\$/\\$\\$/g
+DOMAIN_0=domain.com # Domain for Let's Encrypt certificate generation
+DOMAIN_1=domain.org
 ```
 
 To generate a `username` and `password` hash, use the below `command`
@@ -195,8 +179,8 @@ To confirm that `crowdsec` and `traefik` is working together, we will do a quick
 
 First you modify the `whoami` `.env` file `whoami/.env` with your required details
 
-```env
-URL=whoami.domain.com
+```bash
+URL=whoami.domain.com # Your whoami website address, remember to change the domain.
 PORT=80
 COOKIE=whoami_lvl
 SERVICE=whoami
