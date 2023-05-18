@@ -319,7 +319,7 @@ openssl verify -CAfile ca-cert.pem \
    client-cert.pem
 ```
 
-Microsoft Server Certificate Request [Enable Lightweight Directory Access Protocol (LDAP) over Secure Sockets Layer (SSL) - Windows Server | Microsoft Docs](https://docs.microsoft.com/en-US/troubleshoot/windows-server/identity/enable-ldap-over-ssl-3rd-certification-authority#create-the-certificate-request)
+Microsoft Server Certificate Request [Windows Server Microsoft Docs](https://docs.microsoft.com/en-US/troubleshoot/windows-server/identity/enable-ldap-over-ssl-3rd-certification-authority#create-the-certificate-request)
 
 ## Nutanix Cloud-init custom config
 
@@ -641,7 +641,7 @@ Delete a rule by app
 sudo ufw delete allow http
 ```
 
-## Nutanix NFS Drive on Docker
+## NFS Drive on Docker
 
 To create a NFS share as a persistent drive on docker, we need to first mount the NFS share and manually create the folder (drive name) to which the docker container will map.
 
