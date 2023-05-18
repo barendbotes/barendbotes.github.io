@@ -50,3 +50,5 @@ You will see it connected to the nearest `cloudflare` datacentres
 ```bash
 docker logs cloudflared_clouflared_1
 ```
+
+All you have to do next is to continue on configuring your `cloudflare` from the `cloudflare` ZTNA dashboard.
