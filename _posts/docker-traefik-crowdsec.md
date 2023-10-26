@@ -1,12 +1,18 @@
 ---
-title: Docker with Traefik and Crowdsec
+title: Traefik and Crowdsec with Docker
 date: 2022-07-10 10:00 +0200
 categories: [docker,docker-compose,ips,reverse-proxy]
 tags: [docker,docker-compose,security,reverse-proxy]
 author: barend
 ---
 
-![Docker](https://logos-world.net/wp-content/uploads/2021/02/Docker-Logo-2015-2017.png)
+
+<table>
+  <tr>
+    <td><img src="https://icon.icepanel.io/Technology/svg/Traefik-Proxy.svg" width=500></td>
+    <td><img src="https://docs.crowdsec.net/img/crowdsec_logo.png" width=500 ></td>
+  </tr>
+ </table>
 
 # Docker
 
@@ -44,6 +50,7 @@ touch traefik/data/acme.json
 chmod 600 traefik/data/acme.json
 ```
 
+<<<<<<< HEAD:_posts/2022-07-10-docker-traefik-crowdsec.md
 Next you will need to modify the `traefik/.env` file with your own requirements.
 ```bash
 TRAEFIK_DASH_URL=traefik-dashboard.domain.com # The URL for the Traefik Dashboard
@@ -53,7 +60,25 @@ CF_DNS_API_TOKEN=<your-secure-api-token> # DNS Zone Edit Permissions
 TRAEFIK_HASH=<user-password-hash> # echo $(htpasswd -nb "<USER>" "<PASSWORD>") | sed -e s/\\$/\\$\\$/g
 DOMAIN_0=domain.com # Domain for Let's Encrypt certificate generation
 DOMAIN_1=domain.org
+=======
+Create the `cloudflare` API key file:
+
+```bash
+mkdir traefik/.secret
+echo "api-super-secret-key" >> traefik/.secrets/cloudflare_token
+>>>>>>> e44c83f (Complete Redo of CyberWiki documentation):_posts/docker-traefik-crowdsec.md
 ```
+
+Next you will need to modify the `traefik/.env` file with your own requirements.
+```yaml
+TRAEFIK_DASH_URL=traefik-dashboard.domain.com
+CF_API_EMAIL=user@domain.com
+TRAEFIK_HASH=<user-password-hash> # echo $(htpasswd -nb "<USER>" "<PASSWORD>") | sed -e s/\\$/\\$\\$/g
+DOMAIN_0=domain.com
+DOMAIN_1=domain.org
+```
+{: file="traefik/.env" }
+
 
 To generate a `username` and `password` hash, use the below `command`
 ```bash
@@ -64,13 +89,12 @@ There are other `config` files that you can modify to your liking, `traefik/data
 
 You need to modify the `traefik` system file with your own required `config`. If you want to see if your DNS provider is support, you can find that [here](https://doc.traefik.io/traefik/https/acme/#dnschallenge). Otherwise, you would need to configure a different [challenge](https://doc.traefik.io/traefik/https/acme/#tlschallenge) to get `Let's Encrypt` certificates.
 
-`traefik/data/traefik.yml`
 ```yaml
 # ...
 certificatesResolvers:
   cloudflare:
     acme:
-      email: user@example.com
+      email: user@domain.com
       storage: acme.json
       dnsChallenge:
         provider: cloudflare
@@ -79,6 +103,7 @@ certificatesResolvers:
           - "1.0.0.1:53"
 # ...
 ```
+{: file="traefik/data/traefik.yml" }
 
 We are now ready to deploy `traefik`
 ```bash
@@ -151,7 +176,9 @@ We have to add this to our `bouncer` and create the `container`, for this you ne
       - proxy
     restart: unless-stopped
 ```
+{: file="crowdsec/docker-compose.yml" }
 
+<<<<<<< HEAD:_posts/2022-07-10-docker-traefik-crowdsec.md
 Once uncommented, you need to the uncomment the `bouncer` `middleware` in the `traefik` `system` file `traefik/data/traefik.yml`
 ```yaml
 entryPoints:
@@ -168,6 +195,8 @@ entryPoints:
      middlewares:
        - crowdsec-bouncer@file
 ```
+=======
+>>>>>>> e44c83f (Complete Redo of CyberWiki documentation):_posts/docker-traefik-crowdsec.md
 
 Once everything has been updated and modified, you can now `upgrade` the `containers` with the new config
 ```bash
@@ -177,22 +206,34 @@ docker-compose up -d -f crowdsec/docker-compose.yml --force-recreate
 
 To confirm that `crowdsec` and `traefik` is working together, we will do a quick test
 
+<<<<<<< HEAD:_posts/2022-07-10-docker-traefik-crowdsec.md
 First you modify the `whoami` `.env` file `whoami/.env` with your required details
 
 ```bash
 URL=whoami.domain.com # Your whoami website address, remember to change the domain.
+=======
+First you modify the `whoami/.env` file with your required details
+```yaml
+URL=whoami.domain.com
+>>>>>>> e44c83f (Complete Redo of CyberWiki documentation):_posts/docker-traefik-crowdsec.md
 PORT=80
 COOKIE=whoami_lvl
 SERVICE=whoami
 ```
+{: file="whoami/.env" }
 
 Then you deploy the `container`
 ```bash
 docker-compose up -d -f whoami/docker-compose.yml
 ```
 
+<<<<<<< HEAD:_posts/2022-07-10-docker-traefik-crowdsec.md
 Now navigate to `https://whoami.example.com` and confirm that you have a valid `certificate` from `Let's Encrypt`
 > Remember to point your `whoami.example.com` DNS to your `docker` instance 
+=======
+Now navigate to `https://whoami.domain.com` and confirm that you have a valid `certificate` from `Let's Encrypt`
+> Remember to point your `whoami.domain.com` DNS to your `docker` instance 
+>>>>>>> e44c83f (Complete Redo of CyberWiki documentation):_posts/docker-traefik-crowdsec.md
 {: .prompt-tip}
 
 Test the `crowdsec` `bouncer` by adding your IP to the ban list
@@ -200,7 +241,11 @@ Test the `crowdsec` `bouncer` by adding your IP to the ban list
 docker exec crowdsec_crowdsec_1 cscli decisions add --ip my-ip-address
 ```
 
+<<<<<<< HEAD:_posts/2022-07-10-docker-traefik-crowdsec.md
 Confirm that you received a 'Forbidden' message when navigating to `https://whoami.example.com`
+=======
+Confirm that you received a 'Forbidden' message when navigating to `https://whoami.domain.com`
+>>>>>>> e44c83f (Complete Redo of CyberWiki documentation):_posts/docker-traefik-crowdsec.md
 
 Remove your ban
 ```bash
