@@ -12,8 +12,8 @@ author: barend
 
 ## Requirements
 
-- [**Docker** - *Docker is a set of platform as a service products that use OS-level virtualization to deliver software in packages called containers.*](#)
-- [**Docker-compose** - *Compose is a tool for defining and running multi-container Docker applications.*](#)
+- [**Docker** - *Docker is a set of platform as a service products that use OS-level virtualization to deliver software in packages called containers.*](/posts/random-installations/#docker-and-docker-compose)
+- [**Docker-compose** - *Compose is a tool for defining and running multi-container Docker applications.*](/posts/random-installations/#docker-and-docker-compose)
 - [**Traefik** - *Traefik is a modern HTTP reverse proxy and load balancer that makes deploying microservices easy.* ](/posts/docker-traefik-crowdsec)
 
 ## InvoiceNinja

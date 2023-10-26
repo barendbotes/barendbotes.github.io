@@ -137,5 +137,5 @@ We are now all done setting up the `Ubuntu` cloud server.
 
 ## Installations to consider
 
-- [**Docker and Docker-compose** - *How to install docker and docker-compose*](#)
+- [**Docker and Docker-compose** - *How to install docker and docker-compose*](/posts/random-installations/#docker-and-docker-compose)
 - [**Traefik with Crowdsec** - *How to install Traefik and Crowdsec on Docker*](/posts/docker-traefik-crowdsec/#the-repo)
