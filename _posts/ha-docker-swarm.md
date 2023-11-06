@@ -33,7 +33,7 @@ sudo apt update -y
 First we will create a docker swarm cluster on one of the servers
 
 ```bash
- docker swarm init --default-addr-pool 172.31.0.0/16 --default-addr-pool-mask-length 24
+ docker swarm init --default-addr-pool 172.31.0.0/16 --default-addr-pool-mask-length 24 --advertise-addr eth0 --data-path-addr eth1
 ```
 
 The reason I created an address pool and mask length is because I do not plan on running hundreds and thousands of applications and networks in the cluster, what I chose allows me to run basically 255 /24 seperate networks within in the 172.31.0.0/16 range, so network-1 will be 172.31.0.0/24, network-2 will be 172.31.1.0./24 and so on. If you are planning to scale massively, then you might want to change those parameters to something else like `--default-addr-pool 10.0.0.0/8 --default-addr-pool-mask-length 24`, this will allow you to run 65 025 /24 networks within the 10.0.0.0/8 range.
@@ -71,6 +71,16 @@ You should see something like this:
 To add a manager to this swarm, run the following command:
 
     docker swarm join --token SWMTKN-1-5bovi9l4fb63hghwqckka0ojbc2kx8pkuyyvifm9pnontupr25-exogi65du4w4ri4flobpg0ssn 192.168.1.2:2377
+```
+
+Or use the below to sepatate data plane and control plane traffic ![Docker Separate Data](https://docs.docker.com/engine/swarm/networking/#use-a-separate-interface-for-control-and-data-traffic)
+
+```
+docker swarm join \
+  --token SWMTKN-1-5bovi9l4fb63hghwqckka0ojbc2kx8pkuyyvifm9pnontupr25-exogi65du4w4ri4flobpg0ssn \
+  --advertise-addr eth0 \
+  --data-path-addr eth1 \
+  192.168.1.2:2377
 ```
 
 Copy the docker swarm join command and run it on each new manager.
