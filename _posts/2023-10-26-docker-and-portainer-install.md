@@ -1,8 +1,8 @@
 ---
 title: Docker and Portainer Install
 date: 2023-10-26 10:25 +0200
-categories: [documentation,container,docker,linux]
-tags: [portainer,docker-compose,ubuntu]
+categories: [documentation,container,docker,linux,ips,security]
+tags: [portainer,docker-compose,ubuntu,traefik,crowdsec]
 author: barend
 ---
 
@@ -53,11 +53,44 @@ sudo usermod -aG docker $USER
 > Remember to log out and back into your server for the group permissions to take place.
 {: .prompt-info}
 
-For future reference, we can create the required `docker` networks now. I am using 172.31.0.0/24 for the proxy network as I know I wont have more than 254 applicaitons/containers requiring proxy services and the same goes for the database network.
+Since we are installing this on a single host, I am also going to modify the default network size that `docker` users. Create the following file:
 
+```bash
+sudo touch /etc/docker/daemon.json
 ```
-docker network create -d bridge traefik_proxy --attachable --internal --subnet 172.31.0.0/24
-docker network create -d bridge database_network --attachable --internal --subnet 172.31.1.0/24
+
+Edit the file and add the following
+
+```bash
+sudo systemctl stop docker
+sudo nano /etc/docker/daemon.json
+```
+
+```json
+{
+	"live-restore": true,
+	"bip": "172.31.0.1/24",
+	"default-address-pools": [
+		{
+			"base": "172.31.0.0/16",
+			"size": 24
+		}
+	]
+}
+```
+{: file="/etc/docker/daemon.json" }
+
+Save the file and restart `docker`
+
+```bash
+sudo systemctl start docker
+```
+
+For future reference, we can create the required `docker` networks now.
+
+```bash
+docker network create -d bridge traefik_proxy --attachable --internal
+docker network create -d bridge database_network --attachable --internal
 ```
 > Because we have created a network that is only `internal` any containers or stacks that we create with this network would need an additional network for public access - but that will be done within each `docker-compose.yml` file going forward.
 {: .prompt-info}
@@ -85,10 +118,6 @@ networks:
     name: traefik_proxy
     external: true # <--- Specifying that it was created outside of the current docker stack (this docker-compose.yml file)
   default: # <--- Creating a new network for internet access for the containers
-    ipam:
-      driver: default
-      config:
-        - subnet: "172.31.2.0/24" # <--- Specifying a subnet that we controll note that it is ONE integer up from the last used subnet in the third octet. 172.31.***2***.0/24 we will continue this going forward.
 
 volumes:
   portainer_data: # <--- Creating a docker volume for Portainer's persistent data
