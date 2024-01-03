@@ -320,16 +320,6 @@ If all went well, you have just installed a reverse proxy with automatic certifi
 
 ## Documentation
 
-Subnets that we have created in this tutorial:
-
-|**Subnet**|**Docker Network**|**Type**|**Currently in Use?**|**Attachable Network?**|
-|:---|:---|:---|---:|---:|
-|172.31.0.0/24|traefik_proxy|Internal|yes|yes|
-|172.31.1.0/24|database_network|Internal|no|yes|
-|172.31.2.0/24|portainer_default|External|yes|no|
-|172.31.3.0/24|traefik_default|External|yes|no|
-|172.31.4.0/24|crowdsec_default|External|yes|no|
-
 Local Aliases specified for `containers` and `services`
 
 |**Alias**|**Docker Network**|**Service**|

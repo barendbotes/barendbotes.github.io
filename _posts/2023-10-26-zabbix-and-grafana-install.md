@@ -145,21 +145,7 @@ Once done, you can create the `container`
 docker-compose up -d -f grafana/docker-compose.yml
 ```
 
-
-
-
 ## Documentation
-
-Subnets that we have created in this tutorial:
-
-|**Subnet**|**Docker Network**|**Type**|**Currently in Use?**|**Attachable Network?**|
-|:---|:---|:---|---:|---:|
-|172.31.0.0/24|traefik_proxy|Internal|yes|yes|
-|172.31.1.0/24|database_network|Internal|no|yes|
-|172.31.2.0/24|portainer_default|External|yes|no|
-|172.31.3.0/24|traefik_default|External|yes|no|
-|172.31.4.0/24|crowdsec_default|External|yes|no|
-|172.31.5.0/24|postgres_default|External|yes|no|
 
 Local Aliases specified for `containers` and `services`
 
@@ -171,13 +157,3 @@ Local Aliases specified for `containers` and `services`
 |docker.bouncer.local|traefik_proxy|Crowdsec Bouncer ForwardAuth API|
 |docker.whoami.local|traefik_proxy|Who Am I Web Service|
 |docker.postgres.local|database_network|PostgreSQL Database|
-
-Local IPs specified for `containers` and `services`
-
-|**IP**|**Docker Network**|**Service**|
-|:---|:---|:---|
-|172.31.1.2|database_network|PostgreSQL Database|
-|172.31.1.3|database_network|pgAdmin Application|
-|172.31.1.4|database_network|Zabbix Server|
-|172.31.1.5|database_network|Zabbix Frontend|
-|172.31.1.6|database_network|Grafana Dashboarding|
