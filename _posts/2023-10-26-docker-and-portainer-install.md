@@ -178,7 +178,8 @@ mkdir traefik/.secret
 
 Copy your `API` key from `Cloudflare` into the `cloudflare_token` file.
 ```bash
-echo "api-super-secret-key" >> traefik/.secrets/cloudflare_token
+touch traefik/.secret/cloudflare_token
+echo "api-super-secret-key" >> traefik/.secret/cloudflare_token
 ```
 
 To generate a `username` and `password` hash, use the below `command`
