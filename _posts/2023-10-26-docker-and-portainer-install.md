@@ -186,6 +186,8 @@ To generate a `username` and `password` hash, use the below `command`
 ```bash
 echo $(htpasswd -nb "<USER>" "<PASSWORD>") | sed -e s/\\$/\\$\\$/g
 ```
+> You might need to install apache2-utils for the above to work: `sudo apt install apache2-utils -y` 
+{: .prompt-info}
 
 Next you will need to modify the `traefik/.env` file with your own requirements.
 ```yaml
@@ -205,7 +207,7 @@ You need to modify the `traefik` system file with your own required `config`. If
 certificatesResolvers:
   cloudflare:
     acme:
-      email: user@domain.com
+      email: user@domain.com # <-- Enter in your Cloudflare email address 
       storage: acme.json
       dnsChallenge:
         provider: cloudflare
@@ -278,8 +280,8 @@ We have to add this to our `bouncer` and create the `container`, for this you ne
 
 Once everything has been updated and modified, you can now `upgrade` the `containers` with the new config
 ```bash
-docker-compose up -d -f traefik/docker-compose.yml --force-recreate
-docker-compose up -d -f crowdsec/docker-compose.yml --force-recreate
+docker-compose -f traefik/docker-compose.yml up -d --force-recreate
+docker-compose -f crowdsec/docker-compose.yml up -d --force-recreate
 ```
 
 To confirm that `crowdsec` and `traefik` is working together, we will do a quick test
@@ -295,7 +297,7 @@ TRAEFIK_SERVICE=whoami
 
 Then you deploy the `container`
 ```bash
-docker-compose up -d -f whoami/docker-compose.yml
+docker-compose -f whoami/docker-compose.yml up -d
 ```
 
 Now navigate to `https://whoami.domain.com` and confirm that you have a valid `certificate` from `Let's Encrypt`
