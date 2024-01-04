@@ -91,6 +91,7 @@ For future reference, we can create the required `docker` networks now.
 ```bash
 docker network create -d bridge traefik_proxy --attachable --internal
 docker network create -d bridge database_network --attachable --internal
+docker network create -d bridge crowdsec_network --attachable --internal
 ```
 > Because we have created a network that is only `internal` any containers or stacks that we create with this network would need an additional network for public access - but that will be done within each `docker-compose.yml` file going forward.
 {: .prompt-info}
@@ -270,7 +271,7 @@ We have to add this to our `bouncer` and create the `container`, for this you ne
       GIN_MODE: release
     networks:
       default:
-      traefik_proxy:
+      crowdsec_network:
         aliases: 
           - docker.bouncer.local
     restart: unless-stopped
@@ -329,6 +330,6 @@ Local Aliases specified for `containers` and `services`
 |:---|:---|:---|
 |docker.portainer.local|traefik_proxy|Portainer|
 |docker.traefik.local|traefik_proxy|Traefik Proxy|
-|docker.crowdsec.local|traefik_proxy|Crowdsec API|
-|docker.bouncer.local|traefik_proxy|Crowdsec Bouncer ForwardAuth API|
+|docker.crowdsec.local|crowdsec_network|Crowdsec API|
+|docker.bouncer.local|crowdsec_network|Crowdsec Bouncer ForwardAuth API|
 |docker.whoami.local|traefik_proxy|Who Am I Web Service|
