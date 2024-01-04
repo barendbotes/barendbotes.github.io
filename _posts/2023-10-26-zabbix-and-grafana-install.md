@@ -40,7 +40,7 @@ cd docker-templates
 
 First you need to generate a complex password for your `postgres` and `pgadmin` user - run the command twice to get a different string for the second password, the below command will generate a 32 character string without special characters. 
 
-For the `postgres` user
+For the `root` user
 ```bash
 cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 64 | head -n 1
 ```
@@ -68,7 +68,7 @@ TRAEFIK_SCHEME=http
 Once completed, you can then run the `container`.
 
 ```bash
-docker-compose up -d -f postgres/docker-compose.yml
+docker-compose -f postgres/docker-compose.yml up -d
 ```
 
 Confirm it is up by running
