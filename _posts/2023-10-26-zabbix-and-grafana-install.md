@@ -40,7 +40,7 @@ cd docker-templates
 
 First you need to generate a complex password for your `postgres` and `pgadmin` user - run the command twice to get a different string for the second password, the below command will generate a 32 character string without special characters. 
 
-For the `root` user
+For the `postgres` user
 ```bash
 cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 64 | head -n 1
 ```
@@ -99,7 +99,7 @@ TRAEFIK_URL=zabbix.domain.com
 Once done, you can create the `container`
 
 ```bash
-docker-compose up -d -f zabbix/docker-compose.yml
+docker-compose -f zabbix/docker-compose.yml up -d 
 ```
 
 ## Grafana
@@ -109,8 +109,8 @@ Edit the `grafana/.env` file with your own entries. Ignore all the hashed out en
 ```bash
 TZ=Africa/Johannesburg
 GF_INSTALL_PLUGINS=alexanderzobnin-zabbix-app
-GF_SERVER_DOMAIN=grafana.domain.com
-GF_SERVER_ROOT_URL=https://grafana.domain.com
+GF_SERVER_DOMAIN=${TRAEFIK_URL}
+GF_SERVER_ROOT_URL=https://${TRAEFIK_URL}
 GF_PLUGIN_ALLOW_LOCAL_MODE=true
 GF_PANELS_DISABLE_SANITIZE_HTML=true
 GF_SECURITY_ALLOW_EMBEDDING=true
@@ -142,7 +142,7 @@ TRAEFIK_SCHEME=http
 Once done, you can create the `container`
 
 ```bash
-docker-compose up -d -f grafana/docker-compose.yml
+docker-compose -f grafana/docker-compose.yml up -d
 ```
 
 ## Documentation

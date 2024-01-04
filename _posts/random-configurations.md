@@ -951,3 +951,47 @@ You can run the same OID, using snmp v3 with the below command
 ```bash
 snmpwalk -v3  -l authPriv -u snmp-user -a SHA -A "auth-pass"  -x AES -X "private-pass" 10.10.10.10 1.3.6.1.2.1.1.5
 ```
+
+### Docker PostgreSQL pg_hba.conf
+
+Exec into the PostgreSQL container and edit the `pg_hba.conf` file
+
+```conf
+
+vi var/lib/postgresql/data/pg_hba.conf
+```
+
+Make the changes according to the format below and save the config file.
+
+```conf
+# TYPE  DATABASE        USER            ADDRESS                 METHOD
+local   postgres        postgres                                trust
+host    all             postgres        172.16.0.0/12           md5
+host    n8n-db          n8n-user        172.16.0.0/24           md5
+
+```
+{: file="var/lib/postgresql/data/pg_hba.conf" }
+
+Press `esc` and then type the below to `write` and `quit`
+
+```bash
+:wq
+```
+
+Next we want to log into `psql` and reload the `pg_hba.conf` configuration
+
+```bash
+psql -U postgres
+```
+
+Reload the config
+
+```bash
+SELECT pg_reload_conf();
+```
+
+Then exit
+
+```bash
+exit
+```
