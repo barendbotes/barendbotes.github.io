@@ -155,7 +155,7 @@ services:
 
 Having gone through everything, you can now create the `Portainer` application
 ```bash
-docker-compose up -d -f portainer/docker-compose.yml
+docker-compose -f portainer/docker-compose.yml up -d
 ```
 
 To see if it is up and running, you can run the below:
@@ -217,7 +217,7 @@ certificatesResolvers:
 
 We are now ready to deploy `traefik`
 ```bash
-docker-compose up -d -f traefik/docker-compose.yml
+docker-compose -f traefik/docker-compose.yml up -d
 ```
 
 See if the `contianer` is up
