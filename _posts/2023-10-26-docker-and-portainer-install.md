@@ -260,6 +260,13 @@ Api key for 'traefik-bouncer':
 Please keep this key since you will not be able to retrieve it!
 ```
 
+Also add the `traefik` logs parser:
+
+`Exec` into the `container` and add the `traefik` parser
+```bash
+docker exec crowdsec_crowdsec_1 cscli parsers install crowdsecurity/traefik-logs
+```
+
 We have to add this to our `bouncer` and create the `container`, for this you need to modify the `crowdsec/docker-compose.yml` file and uncomment the `traefik-bouncer` service
 ```yaml
   bouncer-traefik:

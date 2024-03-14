@@ -996,6 +996,7 @@ Then exit
 exit
 ```
 
+<<<<<<< HEAD
 ## dotfiles with starship
 
 ```bash
@@ -1275,3 +1276,72 @@ vimcmd_replace_symbol = '[](bold fg:color_purple)'
 vimcmd_visual_symbol = '[](bold fg:color_yellow)'
 ```
 {: file="~/.config/starship.toml" }
+=======
+
+### SSH Key Deployment
+
+```bash
+
+cat ~/.ssh/authorized_keys | ssh $USER@$HOST "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"
+
+```
+
+```bash
+chmod 700 ~/.ssh && chmod 600 ~/.ssh/authorized_keys
+```
+
+### Graylog Docker Keystore
+
+Once you have generated your certificates for Wazuh or Opensearch using the [SOCFortress](https://github.com/socfortress/Wazuh-Rules) `wazuh-certs-tool.sh` cert tool or the [Wazuh](https://github.com/wazuh/wazuh-docker.git) cert tool - I think the SOCFortress one works better.
+
+You have to map a volume to your `Graylog` docker deployment to the config directory.
+
+```yaml
+    volumes:
+      - "graylog_conf:/usr/share/graylog/data/config"
+```
+{: file="./docker-compose.yml" }
+
+Once you have done that, you need to get a way to add the `root-ca.pem` certificate that was generated in the `wazuh-certs-tool.sh` and add it to the `/usr/share/graylog/data/config` directory.
+
+Most of the time you can just `SSH` into your docker server, go to sudo `sudo su` and cd into the mounted directory
+
+```bash
+cd /var/lib/docker/volumes/<stack-name>_graylog_data/_data
+```
+
+Then you can copy the `root-ca.pem` contents into `/usr/share/graylog/data/config/root-ca.pem`
+
+The next bit you need to do when you are consoled into the container itself.
+
+```bash
+docker exec -it <stack-name>-graylog-1 /bin/bash
+```
+
+Once you are in, you then need to copy the `cacerts` from java keystore/whatever... to your `config` directory.
+
+```bash
+cp /opt/java/openjdk/lib/security/cacerts /usr/share/graylog/data/config/cacerts
+```
+
+You then need to import the `root-ca.pem` it into the keystore.
+
+```bash
+/opt/java/openjdk/bin/keytool -importcert -keystore /usr/share/graylog/data/config/cacerts -storepass changeit -alias root_ca -file /usr/share/graylog/data/config/root-ca.pem
+```
+
+It will ask you if you are sure
+
+```bash
+yes
+```
+
+then you are done, now you need to add the following to your `docker-compose.yml` file
+
+```yaml
+    environment:
+      GRAYLOG_ELASTICSEARCH_HOSTS:  "https://admin:admin@indexer.soc.botesnetworks.co.za:9200"
+      GRAYLOG_SERVER_JAVA_OPTS: "$GRAYLOG_SERVER_JAVA_OPTS -Dlog4j2.formatMsgNoLookups=true -Djavax.net.ssl.trustStore=/usr/share/graylog/data/config/cacerts -Djavax.net.ssl.trustStorePassword=changeit"
+```
+{: file="./docker-compose.yml" }
+>>>>>>> 91db009 (added)
