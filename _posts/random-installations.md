@@ -128,11 +128,38 @@ If you haven’t set a passphrase for the private key, you will be logged in imm
 ---
 ## Docker and Docker-compose
 
-I prefer to use the built in repositories for `Docker` as Ubuntu does tend to keep them up to date and I have never had any issue running it.
+I followed the [Docker](https://docs.docker.com/engine/install/ubuntu/#installation-methods) guide, so you can either follow the link or just copy and paste the below for `Ubuntu`.
+
+Uninstall all the old and previous versions of `Docker` and `Container.io` etc.
 
 ```bash
-sudo apt install docker docker-compose -y
+for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get remove $pkg; done
+```
 
+Add the official `Docker` repository and the `GPG` keys
+
+```bash
+sudo apt-get update
+sudo apt-get install ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+```
+
+The repositories:
+
+```bash
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+```
+
+Now install the latest version of `Docker`
+
+```bash
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 ```
 
 Now add your user account to the `Docker` group

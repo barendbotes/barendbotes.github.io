@@ -17,7 +17,6 @@ We will run 3 manager nodes and 1 worker node.
 ## Requirements
 
 - [**Docker** - *Docker is a set of platform as a service products that use OS-level virtualization to deliver software in packages called containers.*](/posts/random-installations/#docker-and-docker-compose)
-- [**Docker-compose** - *Compose is a tool for defining and running multi-container Docker applications.*](/posts/random-installations/#docker-and-docker-compose)
 - [**Keepalived** - *Keepalived provides frameworks for ha and load balancing*](/posts/random-installations/#keepalived)
 - [**Static IP** - *Ubuntu static IP via Netplan*](/posts/random-configurations/#static-ip)
 
@@ -35,6 +34,11 @@ First we will create a docker swarm cluster on one of the servers
 ```bash
  docker swarm init --default-addr-pool 172.31.0.0/16 --default-addr-pool-mask-length 24 --advertise-addr eth0 --data-path-addr eth1
 ```
+
+> --advertise-addr specifies the address that the Swarm Manager advertises for communication with other nodes in the Swarm.
+> --data-path-addr specifies the address used for overlay networking data traffic within the Swarm.
+{: .prompt-info}
+
 
 The reason I created an address pool and mask length is because I do not plan on running hundreds and thousands of applications and networks in the cluster, what I chose allows me to run basically 255 /24 seperate networks within in the 172.31.0.0/16 range, so network-1 will be 172.31.0.0/24, network-2 will be 172.31.1.0./24 and so on. If you are planning to scale massively, then you might want to change those parameters to something else like `--default-addr-pool 10.0.0.0/8 --default-addr-pool-mask-length 24`, this will allow you to run 65 025 /24 networks within the 10.0.0.0/8 range.
 
