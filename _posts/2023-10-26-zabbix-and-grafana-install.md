@@ -8,9 +8,9 @@ author: barend
 
 <table>
   <tr>
-    <td><img src="https://assets.zabbix.com/img/logo/zabbix_logo_500x131.png" width=500></td>
+    <td><img height="250" width="250" src="https://cdn.simpleicons.org/grafana/A9A9A9/D3D3D3" /></td>
     <td><p style="font-size:40px;">+</p></td>
-    <td><img src="https://cdn.icon-icons.com/icons2/2699/PNG/512/grafana_logo_icon_171049.png" width=500 ></td>
+    <td><img width="250" src="../assets/img/zabbix.png" /></td>
   </tr>
  </table>
 

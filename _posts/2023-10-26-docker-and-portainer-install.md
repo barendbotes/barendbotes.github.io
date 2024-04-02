@@ -8,9 +8,9 @@ author: barend
 
 <table>
   <tr>
-    <td><img src="https://upload.wikimedia.org/wikipedia/commons/4/4e/Docker_%28container_engine%29_logo.svg" width=500></td>
+    <td><img height="250" width="250" src="https://cdn.simpleicons.org/docker/A9A9A9/D3D3D3" /></td>
     <td><p style="font-size:40px;">+</p></td>
-    <td><img src="https://cdn.worldvectorlogo.com/logos/portainer-wordmark-1.svg" width=500 ></td>
+    <td><img height="250" width="250" src="https://cdn.simpleicons.org/portainer/A9A9A9/D3D3D3" /></td>
   </tr>
  </table>
 
