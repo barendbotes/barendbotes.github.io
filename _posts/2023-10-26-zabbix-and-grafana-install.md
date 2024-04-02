@@ -10,7 +10,7 @@ author: barend
   <tr>
     <td><img height="250" width="250" src="https://cdn.simpleicons.org/grafana/A9A9A9/D3D3D3" /></td>
     <td><p style="font-size:40px;">+</p></td>
-    <td><img width="250" src="../assets/img/zabbix.png" /></td>
+    <td><img width="250" src="https://assets.zabbix.com/img/logo/zabbix_logo_black_and_white.png" /></td>
   </tr>
  </table>
 
