@@ -149,6 +149,7 @@ vrrp_instance VI_1 {
         }
 }
 ```
+{: file="/etc/keepalived.conf" }
 
 Enable the keepalived service and start it.
 

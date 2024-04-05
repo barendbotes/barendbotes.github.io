@@ -53,7 +53,7 @@ sudo usermod -aG docker $USER
 > Remember to log out and back into your server for the group permissions to take place.
 {: .prompt-info}
 
-Since we are installing this on a single host, I am also going to modify the default network size that `docker` users. Create the following file:
+Since we are installing this on a single host, I am also going to modify the default network size that `docker` uses. Create the following file:
 
 ```bash
 sudo touch /etc/docker/daemon.json
