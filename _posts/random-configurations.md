@@ -996,7 +996,6 @@ Then exit
 exit
 ```
 
-<<<<<<< HEAD
 ## dotfiles with starship
 
 ```bash
@@ -1276,7 +1275,6 @@ vimcmd_replace_symbol = '[](bold fg:color_purple)'
 vimcmd_visual_symbol = '[](bold fg:color_yellow)'
 ```
 {: file="~/.config/starship.toml" }
-=======
 
 ### SSH Key Deployment
 
@@ -1344,4 +1342,3 @@ then you are done, now you need to add the following to your `docker-compose.yml
       GRAYLOG_SERVER_JAVA_OPTS: "$GRAYLOG_SERVER_JAVA_OPTS -Dlog4j2.formatMsgNoLookups=true -Djavax.net.ssl.trustStore=/usr/share/graylog/data/config/cacerts -Djavax.net.ssl.trustStorePassword=changeit"
 ```
 {: file="./docker-compose.yml" }
->>>>>>> 91db009 (added)

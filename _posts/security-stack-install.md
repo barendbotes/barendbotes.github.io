@@ -41,5 +41,3 @@ cd docker-templates
 
 ## Docker Swarm Setup
 
-
-
