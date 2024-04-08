@@ -1094,7 +1094,7 @@ done
 {: file="~/install_starship.sh" }
 
 ```bash
-chmod +x insatll_starship.sh
+chmod +x install_starship.sh
 ```
 
 ```bash
