@@ -42,13 +42,8 @@ install_starship() {
     fi
     # Set default preset to gruvbox-rainbow
     starship preset gruvbox-rainbow -o ~/.config/starship.toml
-    # Modify Starship configuration
-    sed -i 's/\$username\$hostname\\/\$username\\\n\$hostname\\/' ~/.config/starship.toml
-    echo -e "\n[hostname]" >> ~/.config/starship.toml
-    echo "ssh_only = false" >> ~/.config/starship.toml
-    echo 'style = "bg:color_orange fg:color_fg0"' >> ~/.config/starship.toml
-    echo 'format = "[@ \$hostname ](\$style)"' >> ~/.config/starship.toml
-    echo "disabled = false" >> ~/.config/starship.toml
+    # Download and overwrite the Starship configuration file
+    curl -fLo ~/.config/starship.toml https://raw.githubusercontent.com/barendbotes/barendbotes.github.io/main/_data/assets/starship.toml
 }
 
 # Main script
