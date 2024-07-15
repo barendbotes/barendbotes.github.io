@@ -23,7 +23,7 @@ install_nerd_font() {
     font_name=$1
     echo "Installing $font_name..."
     # Download and install the chosen Nerd Font
-    curl -fLo "$font_name.zip" https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/$font_name.zip
+    curl -fLo "$font_name.zip" https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/$font_name.zip
     unzip -o "$font_name.zip" -d ~/.fonts
     rm "$font_name.zip"
     # Refresh font cache
@@ -48,13 +48,20 @@ install_starship() {
 
 # Main script
 echo "Select a Nerd Font to install:"
-options=("FiraCode" "JetBrainsMono" "Hack" "Quit")
+options=("FiraCode" "JetBrainsMono" "Hack" "Quit" "Agave")
 select opt in "${options[@]}"; do
     case $opt in
         "FiraCode")
             install_fontconfig
             install_unzip
             install_nerd_font "FiraCode"
+            install_starship
+            break
+            ;;
+        "Agave")
+            install_fontconfig
+            install_unzip
+            install_nerd_font "Agave"
             install_starship
             break
             ;;
