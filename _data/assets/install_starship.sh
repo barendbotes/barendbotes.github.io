@@ -48,7 +48,7 @@ install_starship() {
 
 # Main script
 echo "Select a Nerd Font to install:"
-options=("FiraCode" "JetBrainsMono" "Hack" "Quit" "Agave")
+options=("FiraCode" "Agave" "JetBrainsMono" "Hack" "Quit")
 select opt in "${options[@]}"; do
     case $opt in
         "FiraCode")
