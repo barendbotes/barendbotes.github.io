@@ -1058,9 +1058,16 @@ install_starship() {
 
 # Main script
 echo "Select a Nerd Font to install:"
-options=("FiraCode" "JetBrainsMono" "Hack" "Quit")
+options=("Agave" "FiraCode" "JetBrainsMono" "Hack" "Quit")
 select opt in "${options[@]}"; do
     case $opt in
+        "Agave")
+            install_fontconfig
+            install_unzip
+            install_nerd_font "Agave"
+            install_starship
+            break
+            ;;
         "FiraCode")
             install_fontconfig
             install_unzip
